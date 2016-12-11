@@ -8,6 +8,8 @@ src='../thesis/doc/imgs'
 [[ ! -d imgs ]] && mkdir -v imgs
 
 rsync --verbose ${src}/*.png imgs/
+[[ -d '../src/ytterbium' ]]\
+    && rsync --verbose ../src/ytterbium/*.png imgs/
 
 for f in ${src}/*.pdf; do
     convert -verbose -density 300 $f imgs/$(basename ${f%.*}).png;
