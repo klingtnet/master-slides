@@ -9,7 +9,8 @@ $height: 768
 -->
 
 **University of Leipzig**
-Faculty of Mathematics and Computer Science - Department of Computer Science
+Faculty of Mathematics and Computer Science
+<small>Department of Computer Science</small>
 
 # Programming a remote controllable realtime FM audio synthesizer in Rust
 
@@ -21,31 +22,36 @@ Leipzig / December 12th, 2016</small>
 
 ---
 <!-- page_number: true -->
-
-1. Motivation
-1. Objectives
-1. Fundamentals
-1. Evaluation
-1. Implementation/Demo
-1. Conclusion
-
----
 # Motivation
 
-- always been interested in audio hardware and musical synthesizers (DIY loudspeaker hobbyist)
-- building a synthesizer is a great way to learn digital signal processing techniques
 - development of real-time audio software involves to overcome many interesting obstacles
+	- digital signal processing issues
 	- synchronization and timing problems
 	- numerical issues
+- always been interested in audio hardware and musical synthesizers (DIY loudspeaker hobbyist)
+- building a synthesizer is a great way to learn digital signal processing techniques
 
 ---
 # Objectives
 
 - develop a fully functional real-time software synthesizer
-- multi-oscillator and polyphonic
+- multi-oscillator and polyphonic (multiple voices at a time)
 - supports frequency modulation synthesis (FM)
 - good audio quality
 - controllable with common music hardware
+
+---
+
+1. MIDI and OSC
+1. Synthesizer Fundamentals
+	1. Waveforms
+	2. Aliasing
+	3. Synthesis Methods
+	4. Oscillators
+	5. Filters
+1. Evaluation
+1. Implementation/Demo
+1. Conclusion
 
 ---
 # Musical Instrument Digital Interface (MIDI)
@@ -83,7 +89,6 @@ Leipzig / December 12th, 2016</small>
 	- parameters: amplitude, frequency, phase, waveform
 - multiple oscillators per voice
 - each voice plays a single note
-- polyphonic: multiple voices at a time
 - synthesis techniques:
 	- additive, subtractive, FM, ...
 
@@ -191,7 +196,7 @@ Leipzig / December 12th, 2016</small>
 - pre-integrate windowed sinc $\rightarrow$ step function
 - mix in step at discontinuities
 
-![](imgs/blep.png)
+![60%](imgs/blep.png)
 
 ---
 
@@ -265,7 +270,7 @@ Leipzig / December 12th, 2016</small>
 # Latency
 
 - hard to measure
-- latency from input to sound card $<20 ms$ is okay
+- latency from input to sound card $<20\,\text{ms}$ is okay
 - can be approximated by:
 
 $$
@@ -275,6 +280,26 @@ $$
 - $f_s$ sample rate
 - $b_{syn}, b_{out}$ synthesizer and sound card buffer size
 - $l_{in}$ input latency, depends on connection (wifi, USB, bluetooth, ...)
+- demo latency:	$l=(512+384)/48\,000 \approx18.7\,\text{ms}$
+
+---
+# Conclusion
+
+- implementing an audio synthesizer is serious work if done right
+	- each sub-topic broad enough for a separate  thesis
+- audio quality of wavetable oscillators is sufficient for reasonable table-sizes and linear interpolation
+- optimization: combination of different techniques, e.g. BLEP and wavetables 
+- IIR in TDF-II perform well with parameter changes at audio-rate
+
+---
+
+<h1 style="font-size: 3em;"> Questions?</h1>
+
+- OSC, MIDI
+- additive-, subtractive-, FM-synthesis
+- filter FIR/IIR
+- oscillators: BLIT, BLEP, wavetable
+- Rust
 
 ---
 # Saw and Sine Sweep
@@ -320,22 +345,3 @@ $$
 ![](imgs/lemur-mix.png)
 
 ---
-
-# Conclusion
-
-- implementing an audio synthesizer is serious work if done right
-	- each sub-topic broad enough for a separate  thesis
-- audio quality of wavetable oscillators is sufficient for reasonable table-sizes and linear interpolation
-- optimization: combination of different techniques, e.g. BLEP and wavetables 
-- IIR in TDF-II perform well with parameter changes at audio-rate
-
----
-<!-- *page_number: false -->
-
-<h1 style="font-size: 3em;"> Questions?</h1>
-
-- OSC, MIDI
-- additive-, subtractive-, FM-synthesis
-- filter FIR/IIR
-- oscillators: BLIT, BLEP, wavetable
-- Rust
